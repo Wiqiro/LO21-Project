@@ -1,17 +1,22 @@
 #include "individu.h"
 
 
-Individual insert_head(Individual l, Bit val) {
+static Individual _insert_head(Individual l, Bit val) {
     Individual new_i = (Individual) malloc(sizeof(BitListElem));
     new_i->next = l;
     new_i->val = val;
     return new_i;
 }
 
+
+static Bit _random_bit(double prob) {
+    return (rand() <= prob * RAND_MAX);
+}
+
 Individual random_bit_list_init_I(int8_t size) {
     Individual l = NULL;
     for (int i=0; i<size; i++) {
-        l = insert_head(l, rand()%2);
+        l = _insert_head(l, _random_bit(0.5));
     }
     return l;
 }
@@ -20,7 +25,7 @@ Individual random_bit_list_init_R(int8_t size) {
     if (size == 0) {
         return NULL;
     } else {
-        return insert_head(random_bit_list_init_R(size - 1), rand()%2);
+        return _insert_head(random_bit_list_init_R(size - 1), rand()%2);
     }
 }
 
@@ -37,28 +42,30 @@ void print_bitlist(Individual l) {
 
 
 u_int64_t bit_list_value(Individual l) {
-    BitListElem* p = l;
+    BitListElem* e = l;
     u_int64_t value = 0;
-    while (p != NULL) {
-        value = 2*value + p->val;
-        p = p->next;
+    while (e != NULL) {
+        value = 2*value + e->val;
+        e = e->next;
     }
     return value;
 }
 
+static double _pow2(u_int8_t x) {
+    return 1 << x;
+}
+
 //make pow 2 function
 double f1(u_int64_t x, u_int8_t size) {
-    double X = (x / (pow(2, size))) * (1-(-1)) + (-1);
+    double X = (x / _pow2(size)) * (1-(-1)) + (-1);
     //printf(" %.2f", -X * X);
 
     return -(X * X);
-
 }
 
-void cross_bitlists(Individual l1, Individual l2, float prob) {
+void cross_bitlists(Individual l1, Individual l2, double pCroise) {
     while (l1 != NULL && l2 != NULL) {
-        float x = (float) (rand()%10000) / 10000;
-        if (x < prob) {
+        if (_random_bit(pCroise)) {
             Bit tmp = l1->val;
             l1->val = l2->val;
             l2->val = tmp;

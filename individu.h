@@ -18,13 +18,12 @@ typedef struct bit_list_elem {
 typedef BitListElem* Individual;
 
 
-Individual insert_head(Individual l, Bit val);
 Individual random_bit_list_init_I(int8_t size);
 Individual random_bit_list_init_R(int8_t size);
 void print_bitlist(Individual l);
 u_int64_t bit_list_value(Individual l);
 double f1(u_int64_t x, u_int8_t size);
-void cross_bitlists(Individual l1, Individual l2, float prob);
+void cross_bitlists(Individual l1, Individual l2, double pCroise);
 void free_indiv(Individual *i);
 
 #endif

@@ -12,9 +12,8 @@ Population p_insert_head(Population p, Individual i) {
 
 Population random_indiv_list_init_I(u_int32_t pop_size, u_int8_t indiv_size) {
     Population p = NULL;
-    for (int x=0; x<pop_size; x++) {
-        Individual i = random_bit_list_init_I(indiv_size);
-        p = p_insert_head(p, i);
+    for (int i=0; i<pop_size; i++) {
+        p = p_insert_head(p, random_bit_list_init_I(indiv_size));
     }
     return p;
 }
@@ -35,27 +34,25 @@ void print_population(Population p) {
     }
 }
 
+static void _swap(IndivListElem* a, IndivListElem* b) {
+    Individual tmp = a->indiv;
+    a->indiv = b->indiv;
+    b->indiv = tmp;
+}
+
 static IndivListElem* _partition(IndivListElem *l, IndivListElem *h) {
 
     double x = f1(bit_list_value(h->indiv), SIZE);
 
     IndivListElem *i = l;
-    Individual tmp;
-
 
     for (IndivListElem *j = l; j != h; j = j->next) {
         if (f1(bit_list_value(j->indiv), SIZE) > x) {
-            tmp = i->indiv;
-            i->indiv = j->indiv;
-            j->indiv = tmp;
-
+            _swap(i, j);
             i = i->next;
         }
     }
-
-    tmp = i->indiv;
-    i->indiv = h->indiv;
-    h->indiv = tmp;
+    _swap(i, h);
     return i;
 }
 
@@ -84,9 +81,9 @@ void pop_select(Population p, u_int8_t t_select) {
     }
 }
 
-Population cross_pop(Population p) {
+/* Population cross_pop(Population p) {
     
-}
+} */
 
 void free_pop(Population *p) {
     if (*p != NULL) {
