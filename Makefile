@@ -9,7 +9,7 @@ EXPORT = sh export.sh
 LIBTARGET :=lib$(LIBCORENAME:=.so)
 LIBSDIR += -L/usr/lib
 INCLUDEDIR += -I/usr/include
-CLEANCMD = rm -rf *.o *.so *.exe *.dll
+CLEANCMD = rm -rf *.o *.so main
 
 LIBSOURCE = individu population
 LIBSOURCECFILE = $(LIBSOURCE:=.c)
