@@ -1,7 +1,7 @@
 #include "population.h"
 
-Population p_insert_head(Population p, Individual i) {
-    Population new_p = (Population) malloc(sizeof(IndivListElem));
+static Population _insererTete(Population p, Individu i) {
+    Population new_p = (Population) malloc(sizeof(PElem));
     new_p->next = p;
     new_p->indiv = i;
     if (p != NULL) {
@@ -10,19 +10,19 @@ Population p_insert_head(Population p, Individual i) {
     return new_p;
 }
 
-Population random_indiv_list_init_I(u_int32_t pop_size, u_int8_t indiv_size) {
+Population popInit(uint32_t taillePop, Param *param) {
     Population p = NULL;
-    for (int i=0; i<pop_size; i++) {
-        p = p_insert_head(p, random_bit_list_init_I(indiv_size));
+    for (int i=0; i<taillePop; i++) {
+        p = _insererTete(p, indivInitI(param->longIndiv));
     }
     return p;
 }
 
-void print_population(Population p) {
-    IndivListElem* e = p;
+void afficherPop(Population p, Param *param) {
+    PElem* e = p;
     int8_t i = 0;
     while (e != NULL) {
-        print_bitlist(e->indiv);
+        afficherIndiv(e->indiv, param);
         e = e->next;
         if (i == 8) {
             printf("\n");
@@ -34,44 +34,54 @@ void print_population(Population p) {
     }
 }
 
-static void _swap(IndivListElem* a, IndivListElem* b) {
-    Individual tmp = a->indiv;
+static void _echanger(PElem *a, PElem *b) {
+    Individu tmp = a->indiv;
     a->indiv = b->indiv;
     b->indiv = tmp;
 }
 
-static IndivListElem* _partition(IndivListElem *l, IndivListElem *h) {
+static PElem* _partitionner(PElem *d, PElem *f, Param *param) {
 
-    double x = f1(bit_list_value(h->indiv), SIZE);
+    double x = qualite(valeurIndiv(f->indiv), param);
 
-    IndivListElem *i = l;
+    PElem *i = d;
 
-    for (IndivListElem *j = l; j != h; j = j->next) {
-        if (f1(bit_list_value(j->indiv), SIZE) > x) {
-            _swap(i, j);
+    for (PElem *j = d; j != f; j = j->next) {
+        if (qualite(valeurIndiv(j->indiv), param) > x) {
+            _echanger(i, j);
             i = i->next;
         }
     }
-    _swap(i, h);
+    _echanger(i, f);
     return i;
 }
 
 
-void quicksort(IndivListElem* l, IndivListElem *h) {
-    if (h != NULL && l != h && l != h->next) {
-        IndivListElem *p = _partition(l, h);
-        quicksort(l, p->prev);
-        quicksort(p->next, h);
+static void _quicksort(PElem* d, PElem *f, Param *param) {
+    if (f != NULL && d != f && d != f->next) {
+        PElem *p = _partitionner(d, f, param);
+        _quicksort(d, p->prev, param);
+        _quicksort(p->next, f, param);
     }
 }
 
-void pop_select(Population p, u_int8_t t_select) {
+void quicksort(Population p, Param *param) {
+    if (p != NULL) {
+        PElem* f = p;
+        while (f->next != NULL) {
+            f = f->next;
+        }
+        _quicksort(p, f, param);
+    }
+}
 
-    IndivListElem* e_select = p;
-    u_int8_t i = 0;
+void selectPop(Population p, uint8_t tSelect) {
 
-    for (IndivListElem* e = p; e != NULL; e = e->next) {
-        if (i == t_select) {
+    PElem* e_select = p;
+    uint8_t i = 0;
+
+    for (PElem* e = p; e != NULL; e = e->next) {
+        if (i == tSelect) {
             i = 0;
             e_select = p;
         }
@@ -85,10 +95,10 @@ void pop_select(Population p, u_int8_t t_select) {
     
 } */
 
-void free_pop(Population *p) {
+void viderPop(Population *p) {
     if (*p != NULL) {
-        free_pop(&(*p)->next);
-        free_indiv(&(*p)->indiv);
+        viderPop(&(*p)->next);
+        supprIndiv(&(*p)->indiv);
         free(*p);
         *p = NULL;
     }

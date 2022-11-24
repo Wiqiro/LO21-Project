@@ -1,17 +1,38 @@
-main: population.o individu.o main.o
-	gcc -o main population.o individu.o main.o -lm
+CXX = gcc
+CFLAGS = -Wall -Werror -fpic -pedantic 
+LIBSDIR = -L.
+INCLUDEDIR = -I.
 
-population.o: population.c
-	gcc -o population.o -c population.c -Wall -pedantic -lm
+LIBCORENAME = projet
 
-individu.o: individu.c
-	gcc -o individu.o -c individu.c -Wall -pedantic -lm
+EXPORT = sh export.sh
+LIBTARGET :=lib$(LIBCORENAME:=.so)
+LIBSDIR += -L/usr/lib
+INCLUDEDIR += -I/usr/include
+CLEANCMD = rm -rf *.o *.so *.exe *.dll
 
-main.o: main.c population.h individu.h
-	gcc -o main.o -c main.c -Wall -pedantic -lm
+LIBSOURCE = individu population
+LIBSOURCECFILE = $(LIBSOURCE:=.c)
+LIBSOURCEOFILE = $(LIBSOURCE:=.o)
 
-clean:
-	rm -rf *.o main
+EXESOURCE = main
+TARGET = $(EXESOURCE:=.exe)
+EXESOURCECFILE = $(EXESOURCE:=.c)
+EXESOURCEOFILE = $(EXESOURCE:=.o)
 
-run:
-	./main
+all: $(TARGET)
+
+$(TARGET): $(EXESOURCEOFILE) $(LIBTARGET) 
+	$(CXX) $(EXESOURCEOFILE) -l$(LIBCORENAME) $(LIBSDIR) -o $(TARGET) -lm
+
+$(LIBTARGET): $(LIBSOURCEOFILE) 
+	$(CXX) $(CFLAGS) -shared $(LIBSOURCEOFILE) -o $(LIBTARGET)
+
+.c.o:
+	$(CXX) $(CFLAGS) $(INCLUDEDIR) -c -o $@ $<
+
+run: $(TARGET)
+	$(EXPORT) $(TARGET)
+
+clean: 
+	$(CLEANCMD)

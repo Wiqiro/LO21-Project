@@ -3,21 +3,23 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "individu.h"
+#include "param.h"
 
-typedef struct indiv_list_elem {
-    Individual indiv;
-    struct indiv_list_elem* next;
-    struct indiv_list_elem* prev;
-} IndivListElem;
+typedef struct pElem {
+    Individu indiv;
+    struct pElem* next;
+    struct pElem* prev;
+} PElem;
 
-typedef IndivListElem* Population;
-Population p_insert_head(Population p, Individual i);
-Population random_indiv_list_init_I(u_int32_t pop_size, u_int8_t indiv_size);
-void print_population(Population p);
-void quicksort(IndivListElem* start, IndivListElem* end);
-void pop_select(Population p, u_int8_t t_select);
-void free_pop(Population *p);
+typedef PElem* Population;
+
+Population popInit(uint32_t taillePop, Param *param);
+void afficherPop(Population p, Param *param);
+void quicksort(Population p, Param *param);
+void selectPop(Population p, uint8_t tSelect);
+void viderPop(Population *p);
 
 #endif

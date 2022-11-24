@@ -5,32 +5,48 @@
 #include "population.h"
 #include "individu.h"
 
+double _negLog(double x) {
+    return -log(x);
+}
 
+static double _negSquare(double x) {
+    return -x * x;
+}
+
+Param param = {
+    .longIndiv = 8,
+    .taillePop = 40,
+    .nGen = 90,
+    .pCroise = 50,
+    .tSelect = 20,
+    .qualite = {
+        .fonc = _negSquare,
+        .A = -1,
+        .B = 1
+    }
+};
 
 int main(int argc, char *argv[]) {
-
+    system("clear");
     srand(time(NULL));
-    Population p = random_indiv_list_init_I(20, SIZE);
+    Population p = popInit(20, &param);
 
  
     printf("Linked List before sorting \n");
-    print_population(p);
-    IndivListElem* last = p;
-    if (p != NULL) {
-        while (last->next != NULL) {
-            last = last->next;
-        }
-    }
+    afficherPop(p, &param);
 
-    quicksort(p, last);
-    printf("\nLinked List after sorting \n");
-    print_population(p);
 
-    /* pop_select(p, 10);
-    printf("Linked List after selection \n");
-    print_population(p); */
+    quicksort(p, &param);
+    printf("\n\nLinked List after sorting \n");
+    afficherPop(p, &param);
 
-    free_pop(&p);
+    /* selectPop(p, 10);
+    printf("\n\nLinked List after selection \n");
+    afficherPop(p); */
+    
+
+
+    viderPop(&p);
  
     return 0;
 }

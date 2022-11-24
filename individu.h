@@ -1,29 +1,32 @@
 #ifndef __INDIVIDU_H__
 #define __INDIVIDU_H__
 
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
 #include <math.h>
 
-#define SIZE 12
-
-typedef u_int8_t Bit;
+#include "param.h"
 
 
-typedef struct bit_list_elem {
+
+typedef uint8_t Bit;
+
+
+typedef struct iElem {
     Bit val;
-    struct bit_list_elem* next;
-} BitListElem;
+    struct iElem* next;
+} IElem;
 
-typedef BitListElem* Individual;
+typedef IElem* Individu;
 
 
-Individual random_bit_list_init_I(int8_t size);
-Individual random_bit_list_init_R(int8_t size);
-void print_bitlist(Individual l);
-u_int64_t bit_list_value(Individual l);
-double f1(u_int64_t x, u_int8_t size);
-void cross_bitlists(Individual l1, Individual l2, double pCroise);
-void free_indiv(Individual *i);
+Individu indivInitI(int8_t longIndiv);
+Individu indivInitR(int8_t longIndiv);
+void afficherIndiv(Individu i, Param *param);
+uint64_t valeurIndiv(Individu i);
+double qualite(uint64_t x, Param *param); //TODO:
+void croiserIndiv(Individu i1, Individu i2, double pCroise);
+void supprIndiv(Individu *i);
 
 #endif

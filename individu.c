@@ -1,49 +1,49 @@
 #include "individu.h"
 
 
-static Individual _insert_head(Individual l, Bit val) {
-    Individual new_i = (Individual) malloc(sizeof(BitListElem));
-    new_i->next = l;
+static Individu _insererTete(Individu i, Bit val) {
+    Individu new_i = (Individu) malloc(sizeof(IElem));
+    new_i->next = i;
     new_i->val = val;
     return new_i;
 }
 
 
-static Bit _random_bit(double prob) {
+static Bit _bitAleatoire(double prob) {
     return (rand() <= prob * RAND_MAX);
 }
 
-Individual random_bit_list_init_I(int8_t size) {
-    Individual l = NULL;
-    for (int i=0; i<size; i++) {
-        l = _insert_head(l, _random_bit(0.5));
+Individu indivInitI(int8_t longIndiv) {
+    Individu i = NULL;
+    for (int x=0; x<longIndiv; x++) {
+        i = _insererTete(i, _bitAleatoire(0.5));
     }
-    return l;
+    return i;
 }
 
-Individual random_bit_list_init_R(int8_t size) {
-    if (size == 0) {
+Individu indivInitR(int8_t longIndiv) {
+    if (longIndiv == 0) {
         return NULL;
     } else {
-        return _insert_head(random_bit_list_init_R(size - 1), rand()%2);
+        return _insererTete(indivInitR(longIndiv - 1), rand()%2);
     }
 }
 
-void print_bitlist(Individual l) {
+void afficherIndiv(Individu i, Param *param) {
     printf("[");
-    BitListElem* p = l;
+    IElem* p = i;
     while (p != NULL) {
         printf("%d", p->val);
         p = p->next;
     }
     printf("]");
-    printf("%.2f ", f1(bit_list_value(l), SIZE));
+    printf("%.2f ", qualite(valeurIndiv(i), param));
 }
 
 
-u_int64_t bit_list_value(Individual l) {
-    BitListElem* e = l;
-    u_int64_t value = 0;
+uint64_t valeurIndiv(Individu i) {
+    IElem* e = i;
+    uint64_t value = 0;
     while (e != NULL) {
         value = 2*value + e->val;
         e = e->next;
@@ -51,33 +51,37 @@ u_int64_t bit_list_value(Individual l) {
     return value;
 }
 
-static double _pow2(u_int8_t x) {
+static double _pow2(uint8_t x) {
     return 1 << x;
 }
 
-//make pow 2 function
-double f1(u_int64_t x, u_int8_t size) {
-    double X = (x / _pow2(size)) * (1-(-1)) + (-1);
+
+double qualite(uint64_t x, Param *param) {
+    double X = (x / _pow2(param->longIndiv)) * (param->qualite.B - param->qualite.A) + param->qualite.A;
     //printf(" %.2f", -X * X);
 
-    return -(X * X);
+    return param->qualite.fonc(X);
 }
 
-void cross_bitlists(Individual l1, Individual l2, double pCroise) {
-    while (l1 != NULL && l2 != NULL) {
-        if (_random_bit(pCroise)) {
-            Bit tmp = l1->val;
-            l1->val = l2->val;
-            l2->val = tmp;
+static void _echanger(IElem* a, IElem* b) {
+    Bit tmp = a->val;
+    a->val = b->val;
+    b->val = tmp;
+}
+
+void croiserIndiv(Individu i1, Individu i2, double pCroise) {
+    while (i1 != NULL && i2 != NULL) {
+        if (_bitAleatoire(pCroise)) {
+            _echanger(i1, i2);
         }
-        l1 = l1->next;
-        l2 = l2->next;
+        i1 = i1->next;
+        i2 = i2->next;
     }
 }
 
-void free_indiv(Individual *i) {
+void supprIndiv(Individu *i) {
     if (*i != NULL) {
-        free_indiv(&(*i)->next);
+        supprIndiv(&(*i)->next);
         free(*i);
         *i = NULL;
     }
