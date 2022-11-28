@@ -29,17 +29,6 @@ Individu indivInitR(int8_t longIndiv) {
     }
 }
 
-void afficherIndiv(Individu i, Param *param) {
-    printf("[");
-    IElem* p = i;
-    while (p != NULL) {
-        printf("%d", p->val);
-        p = p->next;
-    }
-    printf("]");
-    printf("%.2f ", qualite(valeurIndiv(i), param));
-}
-
 
 uint64_t valeurIndiv(Individu i) {
     IElem* e = i;
@@ -58,8 +47,6 @@ static double _pow2(uint8_t x) {
 
 double qualite(uint64_t x, Param *param) {
     double X = (x / _pow2(param->longIndiv)) * (param->qualite.B - param->qualite.A) + param->qualite.A;
-    //printf(" %.2f", -X * X);
-
     return param->qualite.fonc(X);
 }
 

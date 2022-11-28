@@ -11,12 +11,12 @@ LIBSDIR += -L/usr/lib
 INCLUDEDIR += -I/usr/include
 CLEANCMD = rm -rf *.o *.so main
 
-LIBSOURCE = individu population
+LIBSOURCE = individu population affichage
 LIBSOURCECFILE = $(LIBSOURCE:=.c)
 LIBSOURCEOFILE = $(LIBSOURCE:=.o)
 
 EXESOURCE = main
-TARGET = $(EXESOURCE:=.exe)
+TARGET = $(EXESOURCE)
 EXESOURCECFILE = $(EXESOURCE:=.c)
 EXESOURCEOFILE = $(EXESOURCE:=.o)
 

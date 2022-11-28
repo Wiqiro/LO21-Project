@@ -10,8 +10,8 @@ typedef struct {
     uint8_t longIndiv;
     uint32_t taillePop;
     uint32_t nGen;
-    double pCroise;
-    double tSelect;
+    float pCroise;
+    float tSelect;
 
     struct {
         double (*fonc)(double);

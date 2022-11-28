@@ -18,22 +18,6 @@ Population popInit(uint32_t taillePop, Param *param) {
     return p;
 }
 
-void afficherPop(Population p, Param *param) {
-    PElem* e = p;
-    int8_t i = 0;
-    while (e != NULL) {
-        afficherIndiv(e->indiv, param);
-        e = e->next;
-        if (i == 8) {
-            printf("\n");
-            i = 0;
-        } else {
-            printf(" ");
-            i++;
-        }
-    }
-}
-
 static void _echanger(PElem *a, PElem *b) {
     Individu tmp = a->indiv;
     a->indiv = b->indiv;
@@ -75,19 +59,20 @@ void quicksort(Population p, Param *param) {
     }
 }
 
-void selectPop(Population p, uint8_t tSelect) {
+void selectPop(Population p, Param *param) {
 
-    PElem* e_select = p;
+    uint32_t nSelect = param->tSelect * param->taillePop;
+    PElem* eSelect = p;
     uint8_t i = 0;
 
-    for (PElem* e = p; e != NULL; e = e->next) {
-        if (i == tSelect) {
+    for (PElem* eParcours = p; eParcours != NULL; eParcours = eParcours->next) {
+        if (i == nSelect) {
             i = 0;
-            e_select = p;
+            eSelect = p;
         }
-        e->indiv = e_select->indiv;
+        eParcours->indiv = eSelect->indiv;
         i++;
-        e_select = e_select->next;
+        eSelect = eSelect->next;
     }
 }
 
