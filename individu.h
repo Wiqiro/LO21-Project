@@ -23,6 +23,7 @@ typedef IElem* Individu;
 
 Individu indivInitI(int8_t longIndiv);
 Individu indivInitR(int8_t longIndiv);
+Individu copierIndiv(Individu i);
 uint64_t valeurIndiv(Individu i);
 double qualite(uint64_t x, Param *param); //TODO:
 void croiserIndiv(Individu i1, Individu i2, double pCroise);

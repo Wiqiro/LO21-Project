@@ -29,6 +29,16 @@ Individu indivInitR(int8_t longIndiv) {
     }
 }
 
+Individu copierIndiv(Individu i) {
+    Individu new_i = NULL;
+    while (i != NULL) {
+        new_i = (Individu) malloc(sizeof(IElem));
+        new_i->val = i->val;
+        i = i->next;
+    }
+    return new_i;
+}
+
 
 uint64_t valeurIndiv(Individu i) {
     IElem* e = i;

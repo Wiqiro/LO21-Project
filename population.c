@@ -10,9 +10,9 @@ static Population _insererTete(Population p, Individu i) {
     return new_p;
 }
 
-Population popInit(uint32_t taillePop, Param *param) {
+Population popInit(Param *param) {
     Population p = NULL;
-    for (int i=0; i<taillePop; i++) {
+    for (int i=0; i<param->taillePop; i++) {
         p = _insererTete(p, indivInitI(param->longIndiv));
     }
     return p;
@@ -76,9 +76,25 @@ void selectPop(Population p, Param *param) {
     }
 }
 
-/* Population cross_pop(Population p) {
-    
-} */
+ Individu _indivAleatoire(Population p) {
+    /* uint32_t pos = rand() % p.taille;
+    for (uint32_t i = 0; i < pos; i++) {
+        p.tete = p.tete->next;
+    } */
+    printf("a");
+    return copierIndiv(p->indiv);
+}
+
+Population croiserPop(Population p, Param *param) {
+    uint32_t taillePop = 20;
+    Population p2 = NULL;
+    for (uint32_t i = 0; i < taillePop; i++) {
+        _insererTete(p2, _indivAleatoire(p));
+        _insererTete(p2, _indivAleatoire(p));
+        croiserIndiv(p2->indiv, p2->next->indiv, param->pCroise);
+    }
+}
+
 
 void viderPop(Population *p) {
     if (*p != NULL) {

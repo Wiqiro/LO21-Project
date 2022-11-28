@@ -16,7 +16,7 @@ typedef struct pElem {
 
 typedef PElem* Population;
 
-Population popInit(uint32_t taillePop, Param *param);
+Population popInit(Param *param);
 void quicksort(Population p, Param *param);
 void selectPop(Population p, Param *param);
 void viderPop(Population *p);

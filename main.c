@@ -44,7 +44,7 @@ Param param = {
 int main(int argc, char *argv[]) {
     system("clear");
     srand(time(NULL));
-    Population p = popInit(40000000, &param);
+    Population p = popInit(&param);
 
  
     printf("Linked List before sorting \n");
