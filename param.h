@@ -12,13 +12,9 @@ typedef struct {
     uint32_t nGen;
     float pCroise;
     float tSelect;
+    double (*fonc)(double, uint8_t);
 
-    struct {
-        double (*fonc)(double);
-        int8_t A, B;
-    } qualite;
-
-} Param ;
+} Param;
 
 
 #endif

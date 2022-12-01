@@ -21,11 +21,12 @@ typedef struct iElem {
 typedef IElem* Individu;
 
 
-Individu indivInitI(int8_t longIndiv);
-Individu indivInitR(int8_t longIndiv);
+Individu indivInitI(uint8_t longIndiv);
+Individu indivInitR(uint8_t longIndiv);
 Individu copierIndiv(Individu i);
-uint64_t valeurIndiv(Individu i);
-double qualite(uint64_t x, Param *param); //TODO:
+uint32_t valeurIndiv(Individu i);
+double f1(double x, uint8_t longIndiv);
+double f2(double x, uint8_t longIndiv);
 void croiserIndiv(Individu i1, Individu i2, double pCroise);
 void supprIndiv(Individu *i);
 

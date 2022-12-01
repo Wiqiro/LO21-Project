@@ -5,7 +5,7 @@ INCLUDEDIR = -I.
 
 LIBCORENAME = projet
 
-EXPORT = sh export.sh
+EXPORT = export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:.
 LIBTARGET :=lib$(LIBCORENAME:=.so)
 LIBSDIR += -L/usr/lib
 INCLUDEDIR += -I/usr/include
@@ -32,7 +32,12 @@ $(LIBTARGET): $(LIBSOURCEOFILE)
 	$(CXX) $(CFLAGS) $(INCLUDEDIR) -c -o $@ $<
 
 run: $(TARGET)
-	$(EXPORT) $(TARGET)
+	$(EXPORT)
+	./$(TARGET)
+
+check: $(TARGET)
+	$(EXPORT)
+	valgrind  ./$(TARGET)
 
 clean: 
 	$(CLEANCMD)

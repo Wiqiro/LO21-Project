@@ -6,62 +6,65 @@
 #include "individu.h"
 #include "affichage.h"
 
-double f1(double x) {
-    return -x * x;
-}
 
-double f2(double x) {
-    return -log(x);
-}
+
+
+/* Param param = {
+    .longIndiv = 8,
+    .taillePop = 16,
+    .nGen = 90,
+    .pCroise = 0.5,
+    .tSelect = 0.7,
+    .fonc = f1
+}; */
 
 
 Param param = {
-    .longIndiv = 8,
-    .taillePop = 2000000,
-    .nGen = 90,
-    .pCroise = 50,
-    .tSelect = 0.5,
-    .qualite = {
-        .fonc = f1,
-        .A = -1,
-        .B = 1
-    }
+    .longIndiv = 2,
+    .taillePop = 20000,
+    .nGen = 1,
+    .pCroise = 1,
+    .tSelect = 1,
+    .fonc = f1
 };
-
-/* Param param = {
-    .longIndiv = 12,
-    .taillePop = 40,
-    .nGen = 90,
-    .pCroise = 50,
-    .tSelect = 20,
-    .qualite = {
-        .fonc = _negLog,
-        .A = 0.1,
-        .B = 5
-    }
-}; */
 
 int main(int argc, char *argv[]) {
     system("clear");
     srand(time(NULL));
-    Population p = popInit(&param);
+    //configurer(&param);
+    clock_t timer = clock();
 
- 
+
+    Population p = popInit(&param);
     printf("Linked List before sorting \n");
+    printf("%ldµs", (clock() - timer));
+    timer = clock();
     //afficherPop(p, &param);
 
 
-    /* quicksort(p, &param);
+    quicksort(p, &param);
     printf("\n\nLinked List after sorting \n");
-    afficherPop(p, &param);
+    printf("%ldµs", (clock() - timer));
+    timer = clock();
+    //afficherPop(p, &param);
 
-    selectPop(p, &param);
+    /* selectPop(p, &param);
     printf("\n\nLinked List after selection \n");
-    afficherPop(p, &param); */
-    
+    printf("%ldµs", (clock() - timer)/1000);
+    timer = clock();
+    //afficherPop(p, &param); */
 
-    afficherIndiv(p->indiv, &param);
-    //viderPop(&p);
+
+    /* Population p2 = croiserPop(p, &param);
+    printf("\n\nLinked List after crossing \n");
+    printf("%ldµs", (clock() - timer)/1000);
+    timer = clock();
+    //afficherPop(p2, &param);
+
+    viderPop(&p2); */
+
+    viderPop(&p);
  
+    printf("\n");
     return 0;
 }
