@@ -215,12 +215,12 @@ typedef PElem *Population;
 ```
 
 <hr>
-#### Structure de configuration
+#### Structure de config
 
-Pour passer aux fonctions les paramètres du programme, la structure *configuration* a également été créée.
+Pour passer aux fonctions les paramètres du programme, la structure *config* a également été créée.
 
 ```c
-struct configuration {
+struct config {
     uint8_t longIndiv;
     uint16_t taillePop;
     uint16_t nGen;
@@ -233,11 +233,11 @@ struct configuration {
  Voici un exemple de son utilisation:
 
 ```c
-struct configuration config; 
-configurer(&config); //entrée des paramètres de la population
+struct config conf; 
+confurer(&conf); //entrée des paramètres de la population
 ...
-quicksort(pop, &config);
-selectPop(pop, &config);
+quicksort(pop, &conf);
+selectPop(pop, &conf);
 ```
 
 Seul un pointeur vers la structure est passée aux fonctions demandant plus d'un paramètre du programme pour éviter trop "d'empilement" lors des appels récursifs.+
@@ -291,10 +291,10 @@ Les options de compilation sont les suivantes:
 
 ```
 .
-├── affichage.c
-├── affichage.h
+├── cli.c
+├── cli.h
 ├── lib
-│   ├── configuration.h
+│   ├── config.h
 │   ├── individu.c
 │   ├── individu.h
 │   ├── Makefile

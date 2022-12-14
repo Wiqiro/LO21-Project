@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-struct configuration {
+struct config {
     uint8_t longIndiv;
     uint16_t taillePop;
     uint16_t nGen;

@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <math.h>
 
-#include "configuration.h"
+#include "config.h"
 
 typedef uint8_t Bit;
 

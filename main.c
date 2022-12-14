@@ -3,36 +3,34 @@
 #include <time.h>
 #include <stdint.h>
 
-#include "population.h"
-#include "individu.h"
-#include "affichage.h"
+#include <population.h>
+#include <individu.h>
+#include <config.h>
 
+#include "cli.h"
 
 int main(int argc, char *argv[]) {
-    system("clear");
+    clear();
     srand(time(NULL));
 
-    struct configuration config; 
-    configurer(&config); //entrée des paramètres de la population
+    struct config conf; 
+    configurer(&conf); //entrée des paramètres de la population
+    Population pop = popInit(&conf); //initialiser la population
 
-    Population pop = popInit(&config); //initialiser la population
+    for (uint16_t gen = 1; gen <= conf.nGen; gen++) { //répéter nGen fois
+        clear();
+        printf("Génération %d / %d\n", gen, conf.nGen);
 
-    for (uint16_t gen = 0; gen < config.nGen; gen++) { //répéter nGen fois
-        system("clear");
-        printf("Generation %d / %d\n", gen, config.nGen);
-
-        Population tmpPop = croiserPop(pop, &config); //croiser la population
+        Population tmpPop = croiserPop(pop, &conf); //croiser la population
         viderPop(&pop);
         pop = tmpPop;
-        quicksort(pop, &config); //trier la population
-        selectPop(pop, &config); //sélectionner la population
+        quicksort(pop, &conf); //trier la population
+        selectPop(pop, &conf); //sélectionner la population
     }
 
-    quicksort(pop, &config);
-    system("clear");
-    printf("Meilleur individu après %d générations:\n", config.nGen);
+    printf("\nMeilleur individu:\n");
+    afficherIndiv(pop->indiv, &conf);
 
-    afficherIndiv(pop->indiv, &config);
     viderPop(&pop);
     return 0;
 }

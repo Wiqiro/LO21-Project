@@ -6,7 +6,7 @@
 #include <stdint.h>
 
 #include "individu.h"
-#include "configuration.h"
+#include "config.h"
 
 typedef struct pElem {
     Individu indiv;
@@ -16,10 +16,10 @@ typedef struct pElem {
 
 typedef PElem *Population;
 
-Population popInit(struct configuration *config);
-void quicksort(Population pop, struct configuration *config);
-void selectPop(Population pop, struct configuration *config);
-Population croiserPop(Population pop, struct configuration *config);
+Population popInit(struct config *conf);
+void quicksort(Population pop, struct config *conf);
+void selectPop(Population pop, struct config *conf);
+Population croiserPop(Population pop, struct config *conf);
 void viderPop(Population *pop);
 
 

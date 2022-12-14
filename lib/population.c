@@ -20,13 +20,13 @@ static Population _insererTete(Population pop, Individu indiv) {
 /**
  * @brief initialise aléatoirement une nouvelle population
  * 
- * @param config passage par adresse des parametres du programme
+ * @param conf passage par adresse des parametres du programme
  * @return Population un pointeur sur la tête de la population créée
  */
-Population popInit(struct configuration *config) {
+Population popInit(struct config *conf) {
     Population pop = NULL;
-    for (uint16_t i = 0; i < config->taillePop; i++) {
-        pop = _insererTete(pop, indivInitI(config->longIndiv));
+    for (uint16_t i = 0; i < conf->taillePop; i++) {
+        pop = _insererTete(pop, indivInitI(conf->longIndiv));
     }
     return pop;
 }
@@ -49,15 +49,15 @@ static void _echanger(PElem *a, PElem *b) {
  * 
  * @param tete pointeur vers la tête de la liste à partitionner
  * @param queue pointeur vers la queue de la liste à partitionner
- * @param config passage par adresse des parametres du programme
+ * @param conf passage par adresse des parametres du programme
  * @return PElem* pointeur vers le pivot placé correctement dans la liste partitionnée
  */
-static PElem* _partitionner(PElem *tete, PElem *queue, struct configuration *config) {
-    double valPivot = config->fQualite(valeurIndiv(queue->indiv), config->longIndiv);
+static PElem* _partitionner(PElem *tete, PElem *queue, struct config *conf) {
+    double valPivot = conf->fQualite(valeurIndiv(queue->indiv), conf->longIndiv);
     PElem *indiv = tete;
 
     for (PElem *j = tete; j != queue; j = j->next) {
-        if (config->fQualite(valeurIndiv(j->indiv), config->longIndiv) > valPivot) {
+        if (conf->fQualite(valeurIndiv(j->indiv), conf->longIndiv) > valPivot) {
             _echanger(indiv, j);
             indiv = indiv->next;
         }
@@ -73,13 +73,13 @@ static PElem* _partitionner(PElem *tete, PElem *queue, struct configuration *con
  * 
  * @param tete pointeur vers la tête de la liste à trier
  * @param queue pointeur vers la queue de la liste à trier
- * @param config passage par adresse des parametres du programme
+ * @param conf passage par adresse des parametres du programme
  */
-static void _quicksort(PElem* tete, PElem *queue, struct configuration *config) {
+static void _quicksort(PElem* tete, PElem *queue, struct config *conf) {
     if (queue != NULL && tete != queue && tete != queue->next) {
-        PElem *pivot = _partitionner(tete, queue, config);
-        _quicksort(tete, pivot->prev, config);
-        _quicksort(pivot->next, queue, config);
+        PElem *pivot = _partitionner(tete, queue, conf);
+        _quicksort(tete, pivot->prev, conf);
+        _quicksort(pivot->next, queue, conf);
     }
 }
 
@@ -87,15 +87,15 @@ static void _quicksort(PElem* tete, PElem *queue, struct configuration *config) 
  * @brief simplifie l'appel à la procédure quicksort
  * 
  * @param pop population à trier
- * @param config passage par adresse des parametres du programme
+ * @param conf passage par adresse des parametres du programme
  */
-void quicksort(Population pop, struct configuration *config) {
+void quicksort(Population pop, struct config *conf) {
     if (pop != NULL) {
         PElem* queue = pop;
         while (queue->next != NULL) {
             queue = queue->next;
         }
-        _quicksort(pop, queue, config);
+        _quicksort(pop, queue, conf);
     }
 }
 
@@ -104,11 +104,11 @@ void quicksort(Population pop, struct configuration *config) {
  * @brief sélectionne les premiers éléments d'une population pour les recopier jusqu'à la fin de la liste
  * 
  * @param pop population à sélectionner
- * @param config passage par adresse des parametres du programme
+ * @param conf passage par adresse des parametres du programme
  */
-void selectPop(Population pop, struct configuration *config) {
+void selectPop(Population pop, struct config *conf) {
 
-    uint16_t nSelect = config->tSelect * config->taillePop;
+    uint16_t nSelect = conf->tSelect * conf->taillePop;
     PElem* eSelect = pop;
     PElem* eParcours = pop;
     uint8_t i = 0;
@@ -133,11 +133,11 @@ void selectPop(Population pop, struct configuration *config) {
  * @brief permet de sélectionner un individu aléatoire dans une population
  * 
  * @param pop la population dans laquelle l'individu est sélectionné
- * @param config passage par adresse des parametres du programme
+ * @param conf passage par adresse des parametres du programme
  * @return Individu l'individu sélectionné aléatoirement
  */
- Individu _indivAleatoire(Population pop, struct configuration *config) {
-    uint16_t pos = rand() % config->taillePop;
+ Individu _indivAleatoire(Population pop, struct config *conf) {
+    uint16_t pos = rand() % conf->taillePop;
     for (uint16_t i = 0; i < pos; i++) {
         pop = pop->next;
     }
@@ -150,18 +150,18 @@ void selectPop(Population pop, struct configuration *config) {
  * de la première population sélectionnée aléatoirement et croisés entre eux
  * 
  * @param pop la population à croiser
- * @param config passage par adresse des parametres du programme
+ * @param conf passage par adresse des parametres du programme
  * @return Population la nouvelle population croisée
  */
-Population croiserPop(Population pop, struct configuration *config) {
+Population croiserPop(Population pop, struct config *conf) {
     Population p2 = NULL;
-    for (uint32_t i = 0; i < config->taillePop/2; i++) {
-        p2 = _insererTete(p2, _indivAleatoire(pop, config));
-        p2 = _insererTete(p2, _indivAleatoire(pop, config));
-        croiserIndiv(p2->indiv, p2->next->indiv, config->pCroise);
+    for (uint32_t i = 0; i < conf->taillePop/2; i++) {
+        p2 = _insererTete(p2, _indivAleatoire(pop, conf));
+        p2 = _insererTete(p2, _indivAleatoire(pop, conf));
+        croiserIndiv(p2->indiv, p2->next->indiv, conf->pCroise);
     }
-    if (config->taillePop % 2 == 0) {
-        p2 = _insererTete(p2, _indivAleatoire(pop, config));
+    if (conf->taillePop % 2 == 0) {
+        p2 = _insererTete(p2, _indivAleatoire(pop, conf));
     }
     return p2;
 }

@@ -1,7 +1,7 @@
 CXX = gcc
 CFLAGS = -Wall -Werror -pedantic
 
-EXESOURCE = main.c affichage.c
+EXESOURCE = main.c cli.c
 EXECUTABLE = main
 LIBNAME = ProjetLO21
 LIBDIR = lib
@@ -20,5 +20,4 @@ check: $(EXECUTABLE)
 	$(EXPORTCMD) valgrind ./$(EXECUTABLE)
 
 clean:
-	cd $(LIBDIR) && make clean
-	$(CLEANCMD)
+	$(CLEANCMD) && cd $(LIBDIR) && make clean
