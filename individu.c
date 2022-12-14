@@ -117,17 +117,17 @@ static void _echanger(IElem *a, IElem *b) {
  * @brief croise deux individus avec une probabilité pCroise d'échanger 
  * les éléments des deux listes à chaque position
  * 
- * @param i1 individu à croiser avec i2
- * @param i2 individu à croiser avec i1
+ * @param indiv1 individu à croiser avec indiv2
+ * @param indiv2 individu à croiser avec indiv1
  * @param pCroise probabilité d'echanger deux éléments
  */
-void croiserIndiv(Individu i1, Individu i2, double pCroise) {
-    while (i1 != NULL && i2 != NULL) {
+void croiserIndiv(Individu indiv1, Individu indiv2, double pCroise) {
+    while (indiv1 != NULL && indiv2 != NULL) {
         if (_bitAleatoire(pCroise)) {
-            _echanger(i1, i2);
+            _echanger(indiv1, indiv2);
         }
-        i1 = i1->next;
-        i2 = i2->next;
+        indiv1 = indiv1->next;
+        indiv2 = indiv2->next;
     }
 }
 

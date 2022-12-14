@@ -12,8 +12,8 @@ int main(int argc, char *argv[]) {
     system("clear");
     srand(time(NULL));
 
-    struct configuration config; //entrée des paramètres de la population
-    configurer(&config);
+    struct configuration config; 
+    configurer(&config); //entrée des paramètres de la population
 
     Population pop = popInit(&config); //initialiser la population
 

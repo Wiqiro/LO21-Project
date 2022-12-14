@@ -25,7 +25,7 @@ void remplacerIndiv(Individu indiv, Individu model);
 uint32_t valeurIndiv(Individu indiv);
 double f1(double x, uint8_t longIndiv);
 double f2(double x, uint8_t longIndiv);
-void croiserIndiv(Individu i1, Individu i2, double pCroise);
+void croiserIndiv(Individu indiv1, Individu indiv2, double pCroise);
 void supprIndiv(Individu *indiv);
 
 #endif

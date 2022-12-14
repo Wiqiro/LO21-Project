@@ -53,11 +53,11 @@ static void _echanger(PElem *a, PElem *b) {
  * @return PElem* pointeur vers le pivot placé correctement dans la liste partitionnée
  */
 static PElem* _partitionner(PElem *tete, PElem *queue, struct configuration *config) {
-    double valPivot = config->fonc(valeurIndiv(queue->indiv), config->longIndiv);
+    double valPivot = config->fQualite(valeurIndiv(queue->indiv), config->longIndiv);
     PElem *indiv = tete;
 
     for (PElem *j = tete; j != queue; j = j->next) {
-        if (config->fonc(valeurIndiv(j->indiv), config->longIndiv) > valPivot) {
+        if (config->fQualite(valeurIndiv(j->indiv), config->longIndiv) > valPivot) {
             _echanger(indiv, j);
             indiv = indiv->next;
         }

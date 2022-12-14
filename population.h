@@ -10,11 +10,11 @@
 
 typedef struct pElem {
     Individu indiv;
-    struct pElem* next;
-    struct pElem* prev;
+    struct pElem *next;
+    struct pElem *prev;
 } PElem;
 
-typedef PElem* Population;
+typedef PElem *Population;
 
 Population popInit(struct configuration *config);
 void quicksort(Population pop, struct configuration *config);

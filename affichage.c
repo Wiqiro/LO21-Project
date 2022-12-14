@@ -38,9 +38,9 @@ void configurer(struct configuration *config) {
         fgets(buffer, 64, stdin);
     } while (buffer[0] != 'f' || (buffer[1] != '1' && buffer[1] != '2') || buffer[2] != '\n');
     if (buffer[1] == '1') {
-        config->fonc = f1;
+        config->fQualite = f1;
     } else {
-        config->fonc = f2;
+        config->fQualite = f2;
     }
 }
 
@@ -51,7 +51,7 @@ void afficherIndiv(Individu indiv, struct configuration *config) {
         printf("%d", pop->val);
         pop = pop->next;
     }
-    printf(" | %.4f]\n", config->fonc(valeurIndiv(indiv), config->longIndiv));
+    printf(" | %.4f]\n", config->fQualite(valeurIndiv(indiv), config->longIndiv));
 }
 
 
