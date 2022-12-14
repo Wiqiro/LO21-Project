@@ -1,6 +1,4 @@
 *.pdf
 *.o
-*.odt
-*.odt#
 main
 *.so    

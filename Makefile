@@ -1,28 +1,24 @@
 CXX = gcc
-CFLAGS = -Wall -Werror -fpic -pedantic
+CFLAGS = -Wall -Werror -pedantic
 
-LIBSOURCE = individu.o population.o affichage.o
+EXESOURCE = main.c affichage.c
 EXECUTABLE = main
 LIBNAME = ProjetLO21
-LIBTARGET := lib$(LIBNAME:=.so)
+LIBDIR = lib
 
-EXPORTCMD = LD_LIBRARY_PATH=.
-CLEANCMD = rm -rf *.o *.so main
+EXPORTCMD = LD_LIBRARY_PATH=$(LIBDIR)
+CLEANCMD = rm -rf main
 
-$(EXECUTABLE): $(EXECUTABLE).o $(LIBTARGET) 
-	$(CXX) $(EXECUTABLE).o -l$(LIBNAME) -lm -L. -o $(EXECUTABLE) 
-
-$(LIBTARGET): $(LIBSOURCE) 
-	$(CXX) $(CFLAGS) -shared $(LIBSOURCE) -o $(LIBTARGET)
-
-.c.o:
-	$(CXX) $(CFLAGS) -c -o $@ $<
+$(EXECUTABLE): $(LIBDIR)
+	cd $(LIBDIR) && make
+	$(CXX) $(EXESOURCE) -I$(LIBDIR) -L$(LIBDIR) -l$(LIBNAME) -lm -o $(EXECUTABLE) 
 
 run: $(EXECUTABLE)
 	$(EXPORTCMD) ./$(EXECUTABLE)
 
 check: $(EXECUTABLE)
-	$(EXPORTCMD) valgrind  ./$(EXECUTABLE)
+	$(EXPORTCMD) valgrind ./$(EXECUTABLE)
 
 clean:
+	cd $(LIBDIR) && make clean
 	$(CLEANCMD)

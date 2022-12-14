@@ -279,10 +279,28 @@ L'information *no leaks are possible* indique que l'intégralité de la mémoire
 
 #### Compilation du projet
 
-Le projet est compilé sous linux à l'aide d'un *Makefile*, outil permettant d'automatiser la compilation. A la compilation, une librairie dynamique *libProjetLO21.so*, contenant les types *Individu* et *Population* ainsi que les opérations qui leur sont associées.
+Le projet est compilé sous linux à l'aide d'un *Makefile*, outil permettant d'automatiser la compilation. En résulte une librairie dynamique *libProjetLO21.so* contenant les types *Individu* et *Population* ainsi que les opérations qui leur sont associées. 
 
 Un exécutable *main* lié à la librairie *ProjetLO21* est également créé, permettant de manipuler les types de la librairie.
+Les options de compilation sont les suivantes:
 
-Les options de compilation sont les suivantes
+- *make*:  compile le programme avec la librairie *ProjetLO21*
+- *make clean*: supprime l'intégralité des fichiers compilés
+- *make run*: compile le programme et lance automatiquement l'exécutable *main* en liant la librairie
+- *make check*: compile le programme et le lance avec la commande *valgrind* pour vérifier les leaks de mémoire
 
-*make*: compile le programme en créant la librairie
+```
+.
+├── affichage.c
+├── affichage.h
+├── lib
+│   ├── configuration.h
+│   ├── individu.c
+│   ├── individu.h
+│   ├── Makefile
+│   ├── population.c
+│   └── population.h
+├── main.c
+└── Makefile
+```
+
