@@ -1,43 +1,34 @@
 CXX = gcc
 CFLAGS = -Wall -Werror -fpic -pedantic 
-LIBSDIR = -L.
-INCLUDEDIR = -I.
+LIBSDIR = -L. -L/usr/lib
+INCLUDEDIR = -I. -I/usr/include
 
-LIBCORENAME = projet
+LIBNAME = projetlo21
+LIBTARGET :=lib$(LIBNAME:=.so)
 
-EXPORT = export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:.
-LIBTARGET :=lib$(LIBCORENAME:=.so)
-LIBSDIR += -L/usr/lib
-INCLUDEDIR += -I/usr/include
+EXPORTCMD = LD_LIBRARY_PATH=.
 CLEANCMD = rm -rf *.o *.so main
 
-LIBSOURCE = individu population affichage
-LIBSOURCECFILE = $(LIBSOURCE:=.c)
-LIBSOURCEOFILE = $(LIBSOURCE:=.o)
+LIBSOURCE = individu.o population.o affichage.o
 
-EXESOURCE = main
-TARGET = $(EXESOURCE)
-EXESOURCECFILE = $(EXESOURCE:=.c)
-EXESOURCEOFILE = $(EXESOURCE:=.o)
+EXECUTABLE = main
 
-all: $(TARGET)
+all: $(EXECUTABLE)
 
-$(TARGET): $(EXESOURCEOFILE) $(LIBTARGET) 
-	$(CXX) $(EXESOURCEOFILE) -l$(LIBCORENAME) $(LIBSDIR) -o $(TARGET) -lm
+$(EXECUTABLE): $(EXECUTABLE).o $(LIBTARGET) 
+	$(CXX) $(EXECUTABLE).o -l$(LIBNAME) $(LIBSDIR) -o $(EXECUTABLE) -lm
 
-$(LIBTARGET): $(LIBSOURCEOFILE) 
-	$(CXX) $(CFLAGS) -shared $(LIBSOURCEOFILE) -o $(LIBTARGET)
+$(LIBTARGET): $(LIBSOURCE) 
+	$(CXX) $(CFLAGS) -shared $(LIBSOURCE) -o $(LIBTARGET)
 
 .c.o:
 	$(CXX) $(CFLAGS) $(INCLUDEDIR) -c -o $@ $<
 
-run: $(TARGET)
-	$(EXPORT)
-	./$(TARGET)
+run: $(EXECUTABLE)
+	$(EXPORTCMD) ./$(EXECUTABLE)
 
-check: $(TARGET)
-	$(EXPORT)
-	valgrind  ./$(TARGET)
+check: $(EXECUTABLE)
+	$(EXPORTCMD) valgrind  ./$(EXECUTABLE)
 
 clean: 
 	$(CLEANCMD)

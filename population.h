@@ -5,11 +5,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-//TODO: remove
-#include <time.h>
-
 #include "individu.h"
-#include "param.h"
+#include "configuration.h"
 
 typedef struct pElem {
     Individu indiv;
@@ -19,11 +16,11 @@ typedef struct pElem {
 
 typedef PElem* Population;
 
-Population popInit(Param *param);
-void quicksort(Population p, Param *param);
-void selectPop(Population p, Param *param);
-Population croiserPop(Population p, Param *param);
-void viderPop(Population *p);
+Population popInit(struct configuration *config);
+void quicksort(Population pop, struct configuration *config);
+void selectPop(Population pop, struct configuration *config);
+Population croiserPop(Population pop, struct configuration *config);
+void viderPop(Population *pop);
 
 
 #endif

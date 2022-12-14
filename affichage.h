@@ -7,12 +7,12 @@
 
 #include "individu.h"
 #include "population.h"
-#include "param.h"
+#include "configuration.h"
 
 
-void configurer(Param *param);
-void afficherIndiv(Individu i, Param *param);
-void afficherPop(Population p, Param *param);
+void configurer(struct configuration *config);
+void afficherIndiv(Individu indiv, struct configuration *config);
+void afficherPop(Population pop, struct configuration *config);
 
 
 #endif
