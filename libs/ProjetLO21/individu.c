@@ -92,7 +92,7 @@ uint32_t valeurIndiv(Individu indiv) {
 
 
 double f1(double x, uint8_t longIndiv) {
-    double X = (x / (1 << longIndiv)) * 2 -1;
+    double X = (x / (1 << longIndiv)) * 2 - 1;
     return -X * X;
 }
 

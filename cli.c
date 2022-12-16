@@ -11,7 +11,7 @@ void afficherIndiv(Individu indiv, struct config *conf) {
         printf("%d", pop->val);
         pop = pop->next;
     }
-    printf(" | %.4f]\n", conf->fQualite(valeurIndiv(indiv), conf->longIndiv));
+    printf("]\n");
 }
 
 void afficherPop(Population pop, struct config *conf) {
@@ -19,8 +19,9 @@ void afficherPop(Population pop, struct config *conf) {
     while (e != NULL) {
         afficherIndiv(e->indiv, conf);
         e = e->next;
-        printf("\n");
+        printf(" ");
     }
+    printf("\n");
 }
 
 void configurer(struct config *conf) {

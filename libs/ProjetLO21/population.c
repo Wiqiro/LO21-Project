@@ -107,7 +107,6 @@ void quicksort(Population pop, struct config *conf) {
  * @param conf passage par adresse des parametres du programme
  */
 void selectPop(Population pop, struct config *conf) {
-
     uint16_t nSelect = conf->tSelect * conf->taillePop;
     PElem* eSelect = pop;
     PElem* eParcours = pop;
@@ -115,11 +114,8 @@ void selectPop(Population pop, struct config *conf) {
 
     while (eParcours != NULL) {
         if (i >= nSelect) {
-            /* supprIndiv(&eParcours->indiv);
-            eParcours->indiv = copierIndiv(eSelect->indiv); */
             remplacerIndiv(eParcours->indiv, eSelect->indiv);
         }
-
         eSelect = eSelect->next;
         eParcours = eParcours->next;
         if (++i % nSelect == 0) {

@@ -1,17 +1,18 @@
+#Instructions de compilation du programme de test de la librairie ProjetLO21
 CXX = gcc
 CFLAGS = -Wall -Werror -pedantic
 
 EXESOURCE = main.c cli.c
 EXECUTABLE = main
 LIBNAME = ProjetLO21
-LIBDIR = lib
+LIBDIR = ./libs/ProjetLO21/
 
 EXPORTCMD = LD_LIBRARY_PATH=$(LIBDIR)
 CLEANCMD = rm -rf main
 
-$(EXECUTABLE): $(LIBDIR)
+$(EXECUTABLE): $(LIBDIR) $(EXESOURCE)
 	cd $(LIBDIR) && make
-	$(CXX) $(EXESOURCE) -I$(LIBDIR) -L$(LIBDIR) -l$(LIBNAME) -lm -o $(EXECUTABLE) 
+	$(CXX) $(EXESOURCE) -I$(LIBDIR) -L$(LIBDIR) -l$(LIBNAME) -lm -o $(EXECUTABLE)
 
 run: $(EXECUTABLE)
 	$(EXPORTCMD) ./$(EXECUTABLE)
@@ -19,5 +20,5 @@ run: $(EXECUTABLE)
 check: $(EXECUTABLE)
 	$(EXPORTCMD) valgrind ./$(EXECUTABLE)
 
-clean:
+clean: $(LIBDIR)
 	$(CLEANCMD) && cd $(LIBDIR) && make clean

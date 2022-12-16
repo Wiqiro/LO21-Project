@@ -13,14 +13,21 @@ int main(int argc, char *argv[]) {
     clear();
     srand(time(NULL));
 
-    struct config conf; 
-    configurer(&conf); //entrée des paramètres de la population
+    struct config conf;
+    //configurer(&conf); //entrée des paramètres de la population
+    conf = (struct config) {
+        .tSelect = .9,
+        .pCroise = .5,
+        .longIndiv = 16,
+        .taillePop = 20,
+        .nGen = 200,
+        .fQualite = f2
+    };
     Population pop = popInit(&conf); //initialiser la population
 
     for (uint16_t gen = 1; gen <= conf.nGen; gen++) { //répéter nGen fois
         clear();
         printf("Génération %d / %d\n", gen, conf.nGen);
-
         Population tmpPop = croiserPop(pop, &conf); //croiser la population
         viderPop(&pop);
         pop = tmpPop;
@@ -28,7 +35,7 @@ int main(int argc, char *argv[]) {
         selectPop(pop, &conf); //sélectionner la population
     }
 
-    printf("\nMeilleur individu:\n");
+    printf("\nMeilleur individu:\n\tValeur: %.6f\n\tChaine: ", conf.fQualite(valeurIndiv(pop->indiv), conf.longIndiv));
     afficherIndiv(pop->indiv, &conf);
 
     viderPop(&pop);

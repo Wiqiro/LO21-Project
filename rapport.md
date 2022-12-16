@@ -4,24 +4,19 @@
 
 ## Introduction
 
-Le projet vise à implémenter des algorithmes génétiques simplifiés en utilisant des types abstraits de données *Individu* et *Population* pour résoudre des problèmes d'optimisation. Dans le cadre de ce projet, les individus sont représentés par des listes de bits, ce qui facilite leur manipulation. Une population est quant à elle représentée par une liste d'individus.  
+
+
+Ce projet vise à implémenter des algorithmes génétiques simplifiés en utilisant des types abstraits de données *Individu* et *Population*, afin résoudre des problèmes d'optimisation. Dans le cadre de ce projet, les individus sont représentés par des listes de bits, ce qui facilite leur manipulation. Une population est quant à elle représentée par une liste d'individus.  
 L'algorithme dans sa globalité consiste à sélectionner les meilleurs individus d'une population pour ensuite les "reproduire", créant une nouvelle génération, et ainsi de suite.
 
 
 
-## I. Type abstrait "Individu"
-
-
-
-Le type “Individu” est représenté par une suite de bits de longueur *longIndiv* donnée.
-
-<hr>
+## I. Type abstrait *Individu*
 
 
 #### Initialisation aléatoire de la liste de bits
 
-L'algorithme d'initialisation aléatoire d'un doit créer une nouvelle liste de taille longIndiv dont chaque bit prend aléatoirement la valeur 0 ou 1 avec une probabilité égale.
-Il doit également être donné en version itérative et récursive.
+L'algorithme d'initialisation aléatoire d'un doit créer une nouvelle liste de taille *longIndiv* dont chaque bit prend aléatoirement la valeur 0 ou 1 avec une probabilité égale. Il doit être réalisé en version itérative et récursive.
 
 La version itérative est constituée d'une simple boucle qui ajoute une bit aléatoire en tête *longIndiv* fois:
 
@@ -45,15 +40,16 @@ Début:
 	si longIndiv = 0 alors
 		indivInitR <- Ø
 	sinon
-		longIndiv <- insérerTête(indivInitR(longIndiv – 1), bitAléatoire())
+		longIndiv <- insérerTête(indivInitR(longIndiv – 1), bitAléatoire(0.5))
 	finsi		
 Fin
 ```
-<hr>
+On notera l'utilisation d'une fonction bitAléatoire, qui retourne un bit aléatoire selon la probabilité de tomber sur 1 passée en argument. Son implémentation est détaillée plus loin.
 
+<hr>
 #### Valeur d’un individu
 
-Cet algorithme parcours la liste d'individu afin d'en déterminer sa valeur, qui est une simple conversion de la liste en décimal. Il se résume à une "découverte" de la liste au fur et à mesure, où l'on multiplie par 2 la valeur de la liste déjà parcourue à chaque passage sur un nouvel élément (ajouter un chiffre à un nombre binaire revient à multiplier revient à doubler sa valeur décimale et y ajouter la valeur du nouveau bit).
+Cet algorithme parcours la liste de l'individu afin d'en déterminer sa valeur, qui est une simple conversion de la liste en décimal. Il se résume à une "découverte" de la liste au fur et à mesure, en se basant sur le fait qu'ajouter un bit à un nombre binaire revient à multiplier revient à doubler sa valeur décimale et y ajouter la valeur du nouveau bit).
 ```
 Fonction valeurIndiv(i: Individu): Entier
 Début:
@@ -101,9 +97,8 @@ Fin
 
 <hr>
 
+
 ## II. Type abstrait "Population"
-
-
 
 #### Initialisation aléatoire de la liste d’individus
 
@@ -120,7 +115,7 @@ Fin
 
 <hr>
 
-#### Tri de la liste à l’aide de Quicksort
+#### Tri de la liste à l’aide de *Quicksort*
 
 ```
 Fonction partitionner(d: PElem, f: PElem): PElem
@@ -176,13 +171,12 @@ Fin
 
 <hr>
 
+
 ## III. Implémentation en C
 
+#### Implémentation du type *Individu*
 
-
-#### Implémentation du type "Individu"
-
-Comme demandé dans la, le type *Bit* est un entier non signé sur 8 bits
+Comme indiqué dans le sujet, le type *Bit* est un entier non signé sur 8 bits, équivalent au type *char*
 
 ```c
 typedef uint8_t Bit;
@@ -200,9 +194,9 @@ typedef IElem* Individu;
 
 <hr>
 
-#### Implémentation du type "Population"
+#### Implémentation du type *Population*
 
-Le type *Population*, quant à lui est implémenté sous la forme d'une liste doublement chainée. En effet, l'algorithme *Quicksort* demande de pouvoir visiter un élément précédent dans la liste. Il est bien sûr possible de l'implémenter sur une liste simplement chaînée mais cela demande d'utiliser des pointeurs supplémentaires dans la liste, ce qui aurait pour effet le nombre d'opérations effectuées. De plus, l'utilisation d'une liste doublement chaînée pour la population a un impact négligeable sur la mémoire, étant donné que chaque élément de cette population contient déjà un individu.
+Le type *Population*, quant à lui est implémenté sous la forme d'une liste doublement chainée. En effet, l'algorithme *Quicksort* demande de pouvoir visiter un élément précédent dans la liste. Il est bien sûr possible de l'implémenter sur une liste simplement chaînée mais cela demande d'utiliser des pointeurs supplémentaires, ce qui aurait pour effet le nombre d'opérations effectuées. De plus, l'utilisation d'une liste doublement chaînée pour la population a un impact négligeable sur la mémoire, étant donné que chaque élément de cette population contient déjà un individu.
 
 ```c
 typedef struct pElem {
@@ -215,7 +209,8 @@ typedef PElem *Population;
 ```
 
 <hr>
-#### Structure de config
+
+#### Structure *config*
 
 Pour passer aux fonctions les paramètres du programme, la structure *config* a également été créée.
 
@@ -234,17 +229,31 @@ struct config {
 
 ```c
 struct config conf; 
-confurer(&conf); //entrée des paramètres de la population
+configurer(&conf); //entrée des paramètres de la population
 ...
 quicksort(pop, &conf);
 selectPop(pop, &conf);
 ```
 
-Seul un pointeur vers la structure est passée aux fonctions demandant plus d'un paramètre du programme pour éviter trop "d'empilement" lors des appels récursifs.+
+Seul un pointeur vers la structure est passée aux fonctions demandant plus d'un paramètre du programme pour éviter trop "d'empilement" lors des appels récursifs.
 
 On notera également le pointeur sur fonction *fQualite* présent dans la structure, qui permet de choisir la fonction que l'on va appliquer pour calculer la qualité d'un individu lors de son tri. En l'occurence, il prendra les valeurs des adresses de *f1* ou *f2*.
 
 <hr>
+#### Fonction *bitAleatoire*
+
+Je n'ai pas proposé d'algorithme pour cette foncton car elle dépend uniquement du language dans lequel elle est implémentée:
+
+```c
+static Bit _bitAleatoire(double prob) {
+    return (rand() <= prob * RAND_MAX);
+}
+```
+
+Elle est cependant intéressante car elle retourne un test booléen correspondant à un bit qui prendra la valeur 1 si la condition est vraie et 0 si elle est fausse. La fonction *rand()* renvoie un entier pseudo-aléatoire dans l'intervalle de 0 à *RAND_MAX*. Ainsi, la valeur renvoyée par la condition aura une probabilité égale à *prob* d'être un 1.
+
+<hr>
+
 
 #### Gestion de la mémoire
 
@@ -263,7 +272,9 @@ void viderPop(Population *pop) {
 }
 ```
 
-Pour m'assurer que chaque parcelle de mémoire allouée est bien libérer, j'ai utilisé l'outil *valgrind*, disponible sous linux.
+On remarquera que chaque élément libéré est remplacé par *NULL*, ce qui n'est pas obligatoire mais préférable
+
+Pour m'assurer que chaque parcelle de mémoire allouée est bien libérée, j'ai utilisé l'outil *valgrind*, disponible sous linux.
 
 ```
 ==29898== HEAP SUMMARY:
@@ -279,10 +290,10 @@ L'information *no leaks are possible* indique que l'intégralité de la mémoire
 
 #### Compilation du projet
 
-Le projet est compilé sous linux à l'aide d'un *Makefile*, outil permettant d'automatiser la compilation. En résulte une librairie dynamique *libProjetLO21.so* contenant les types *Individu* et *Population* ainsi que les opérations qui leur sont associées. 
+Le projet est compilé sous linux à l'aide de l'outil *Make*, permettant d'automatiser la compilation. Un premier *Makefile* dans le répertoire *libs/ProjetLO21* va compiler une librairie dynamique *libProjetLO21.so* contenant les types *Individu* et *Population* ainsi que les opérations qui leur sont associées. 
+Le *Makefile* à la racine du projet va quant à lui créer une exécutable *main* lié à la librairie *ProjetLO21*. Cela permet de de séparer la compilation de la librairie et du programme de test afin de pouvoir utiliser la librairie indépendamment dans d'autres programmes.
 
-Un exécutable *main* lié à la librairie *ProjetLO21* est également créé, permettant de manipuler les types de la librairie.
-Les options de compilation sont les suivantes:
+Pour compiler le projet dans sa globalité, il suffit de lancer le *Makefile* situé à la racine avec les options suivantes:
 
 - *make*:  compile le programme avec la librairie *ProjetLO21*
 - *make clean*: supprime l'intégralité des fichiers compilés
@@ -293,14 +304,15 @@ Les options de compilation sont les suivantes:
 .
 ├── cli.c
 ├── cli.h
-├── lib
-│   ├── config.h
-│   ├── individu.c
-│   ├── individu.h
-│   ├── Makefile
-│   ├── population.c
-│   └── population.h
 ├── main.c
-└── Makefile
+├── Makefile
+└── libs
+    └── ProjetLO21
+        ├── config.h
+        ├── individu.c
+        ├── individu.h
+        ├── Makefile
+        ├── population.c
+        └── population.h
 ```
 
