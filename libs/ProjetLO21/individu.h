@@ -17,14 +17,17 @@ typedef struct iElem {
 
 typedef IElem* Individu;
 
-
-Individu indivInitI(uint8_t longIndiv);
-Individu indivInitR(uint8_t longIndiv);
+Individu insererTete(Individu indiv, Bit val);
+Individu initIndivI(uint8_t longIndiv);
+Individu initIndivR(uint8_t longIndiv);
 Individu copierIndiv(Individu indiv);
-void remplacerIndiv(Individu indiv, Individu model);
+void remplacerIndiv(Individu indiv, Individu modele);
+
 uint32_t valeurIndiv(Individu indiv);
-double f1(double x, uint8_t longIndiv);
-double f2(double x, uint8_t longIndiv);
+double qualiteIndiv(Individu indiv, struct config *conf);
+double f1(double valIndiv, uint8_t longIndiv);
+double f2(double valIndiv, uint8_t longIndiv);
+
 void croiserIndiv(Individu indiv1, Individu indiv2, double pCroise);
 void supprIndiv(Individu *indiv);
 

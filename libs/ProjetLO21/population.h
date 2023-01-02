@@ -16,7 +16,7 @@ typedef struct pElem {
 
 typedef PElem *Population;
 
-Population popInit(struct config *conf);
+Population initPop(struct config *conf);
 void quicksort(Population pop, struct config *conf);
 void selectPop(Population pop, struct config *conf);
 Population croiserPop(Population pop, struct config *conf);
