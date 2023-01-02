@@ -2,8 +2,6 @@
 
 
 
-
-
 ## Introduction
 
 Ce projet vise à implémenter des algorithmes génétiques simplifiés en utilisant des types abstraits de données *Individu* et *Population*, afin résoudre des problèmes d'optimisation. Dans le cadre de ce projet, les individus sont représentés par des listes de bits, ce qui facilite leur manipulation. Une population est quant à elle représentée par une liste d'individus.  
@@ -16,6 +14,7 @@ L'algorithme dans sa globalité consiste à sélectionner les meilleurs individu
 
 #### Initialisation aléatoire de la liste de bits
 
+
 L'algorithme d'initialisation aléatoire d'un doit créer une nouvelle liste de taille *longIndiv* dont chaque bit prend aléatoirement la valeur 0 ou 1 avec une probabilité égale. Il doit être réalisé en version itérative et récursive.
 
 La version itérative est constituée d'une simple boucle qui ajoute une bit aléatoire en tete *longIndiv* fois:
@@ -23,12 +22,16 @@ La version itérative est constituée d'une simple boucle qui ajoute une bit al�
 ```
 Fonction initIndivI(longIndiv: Entier): Individu
 Début:
-	i: Individu <- Ø
+	indiv: Individu <- Ø
 	pour i: Entier de 0 à longIndiv - 1 faire
-		i <- insérerTête(i, bitAléatoire(0.5))
+		indiv <- insérerTête(indiv, bitAléatoire(0.5))
 	fait
-	initIndivI <- i
+	initIndivI <- indiv
 Fin
+
+longIndiv: Entier: longueur de l'individu initialisé
+indiv: Individu: nouvel individu
+i: Entier: variable d'itération de 0 à longIndiv
 ```
 
 
@@ -43,18 +46,21 @@ Début:
 		longIndiv <- insérerTête(initIndivR(longIndiv – 1), bitAléatoire(0.5))
 	finsi		
 Fin
+
+longIndiv: Entier: longueur de l'individu initialisé
 ```
 On notera l'utilisation d'une fonction *bitAléatoire*, qui retourne un bit aléatoire selon la probabilité de tomber sur 1 passée en argument. Son implémentation est détaillée plus loin.
+
 
 <hr>
 
 #### Valeur d’un individu
 
-Cet algorithme parcours la liste de l'individu afin d'en déterminer sa valeur, qui est une simple conversion de la liste en décimal. Il se résume à une "découverte" de la liste au fur et à mesure, en se basant sur le fait qu'ajouter un bit à un nombre binaire revient à multiplier revient à doubler sa valeur décimale et y ajouter la valeur du nouveau bit.
+Cet algorithme parcours la liste de l'individu afin d'en déterminer sa valeur, qui est une simple conversion de la liste en décimal. Il se résume à une "découverte" de la liste au fur et à mesure, en se basant sur le fait qu'ajouter un bit à un nombre binaire revient à doubler sa valeur décimale et y ajouter la valeur du nouveau bit.
 ```
-Fonction valeurIndiv(i: Individu): Entier
+Fonction valeurIndiv(indiv: Individu): Entier
 Début:
-	e: IElem <- tete(i)
+	e: IElem <- tete(indiv)
 	val: Entier <- 0
 	tant que e ≠ Ø faire
 		val <- 2·val + valeur(e)
@@ -62,6 +68,10 @@ Début:
 	fait
 	valeurIndiv <- val
 Fin
+
+indiv: Individu: individu dont la valeur est calculée
+e: IElem: variable d'itération traversant l'individu indiv
+val: Entier: valeur de l'individu
 ```
 <hr>
 
@@ -71,11 +81,24 @@ La qualité d’un individu est calculée selon les fonction *f1* et *f2* donné
 `f1(x) = -X²` et `f2(x) = -ln(X)`
 avec `X = (x/2^longIndiv)(B-A) + A`
 
-```
-Fonction qualite(i: Individu, f(x): Fonction)
-Début
+D'un point de vue algoritmique, cela donne:
 
+```
+Fonction f1(valIndiv: Entier, longIndiv: Entier): Entier
+Début
+	X: Entier <- 2(valIndiv / 2^longIndiv) - 1
+	f1 <- -X²
 Fin
+
+Fonction f2(valIndiv: Entier, longIndiv: Entier): Entier
+Début
+	X: Entier <- 4.9(valIndiv / 2^longIndiv) + 0.1
+	f1 <- -ln(X)
+Fin
+
+valIndiv: valeur de l'individu dont la qualité est calculée
+longIndiv: longueur de l'individu dont la qualité est calculée
+X: Réel: mise à l'échelle préalable au calcul de f1 et f2
 ```
 
 <hr>
@@ -94,26 +117,48 @@ Début
 		indiv2 <- succ(indiv2)
 	fait
 Fin
+
+indiv1: Individu, indiv2: Individu: individus à croiser entre eux
+pCroise: Réel: probabilité d'échanger les éléments de chaque liste à chaque itération
 ```
 
 <hr>
 
 #### Fonctions supplémentaires
 
+Ces fonctions ont été créées pour aider à la manipulation du type *Individu* et sont utilisées par les fonctions du type *Population*:
 
-zyegfuiozdfi
+- CopierIndiv: fonction récursive qui retourne une copie d'un individu
 
-sdqfqsf
+  ```
+  Fonction copierIndiv(indiv: Individu): Individu
+  Début
+  	si indiv ≠ Ø alors
+  		copierIndiv <- insererTete(copierIndiv(succ(tete(indiv))), valeur(indiv))
+  	sinon
+  		copierIndiv <- Ø
+  	finsi
+  Fin
+  
+  indiv: Individu: individu à copier
+  ```
 
-sqf
+- Remplacer Indiv: procédure récursive qui remplace un individu par les bits d'un autre individu, sans en créer un nouveau
 
-sd
-
-qf
-
-qs
-
-f
+  ```
+  Procédure remplacerIndiv(indiv: Individu, modele: Individu)
+  Début
+  	si indiv ≠ Ø et modele ≠ Ø alors
+  		valeur(tete(indiv)) <- valeur(tete(modele))
+  		remplacerIndiv(succ(tete(indiv)), succ(tete(modele)))
+  	finsi
+  Fin
+  
+  indiv: Individu: individu recevant la chaine du modèle
+  modele: Individu: individu à recopier dans indiv
+  ```
+  
+  
 
 <hr>
 
@@ -125,11 +170,16 @@ Cet algorithme est similaire à la version itérative de l'algorithme d'initiali
 ```
 Fonction initPop(taillePop: Entier, longIndiv; Entier): Population
 Début:
-	p: Population <- Ø
+	pop: Population <- Ø
 	pour i: Entier de 0 à taillePop faire
-		p <- insérerTête(p, initIndivI(longIndiv))
+		pop <- insérerTête(pop, initIndivI(longIndiv))
 	fait
 Fin
+
+taillePop: Entier: taille de la population à initialiser
+longIndiv: Entier: longueur des individus de la population
+pop: Population: nouvelle population créée
+i: Entier: variable d'itération de 0 à taillePop
 ```
 
 <hr>
@@ -163,50 +213,74 @@ Fin
 Procedure quicksort(tete: PElem, queue: PElem, longIndiv: Entier, fQualite: Fonction<Réel, Entier>)
 Début
 	si queue ≠ Ø et tete ≠ queue et tete ≠ succ(queue)
-		PElem p = partitionner(tete, queue, longIndiv, fQualite)
-		quicksort(tete, précédent(p), longIndiv, fQualite)
-		quicksort(succ(p), queue, longIndiv, fQualite)
+		PElem e = partitionner(tete, queue, longIndiv, fQualite)
+		quicksort(tete, précédent(e), longIndiv, fQualite)
+		quicksort(succ(e), queue, longIndiv, fQualite)
 	finsi
 Fin
+
+tete: PElem: tete assumée par l'algorithme de la liste à trier
+queue: PElem: queue assumée par l'algorithme de la liste à trier
+longIndiv: Entier: longueur des individus à trier
+fQualite: Fonction: fonction de qualité utilisée (f1 ou f2)
+pivot: Réel: valeur de l'élément pris en pivot (dernier élément)
+i: PElem, j: PElem: variables d'itération utilisées lors du partitionnement de la liste
+e: élément correspondant au pivot une fois la liste partitionnée
 ```
 <hr>
+
 #### Sélectionner les meilleurs individus
 
 
 
-Recopier algo et expliquer les deux conditions dans la boucle
+Cette procédure a pour but de sélectionner les meilleurs individus d'une population donnée selon un taux *tSelect*. Dans un premier temps, il calcule le nombre d'individu à recopier, puis remplace les individus de la population en boucle par les *nSelect* premiers individus. Pour cela, deux variables d'itération sont nécessaires: la première, *eSelect*, boucle sur les *nSelect* premiers éléments tandis que *eParcours* parcours toute la population pour y recpoier la valeur de *eSelect*.
+
+On notera que la mémoire n'est pas réallouée et qu'aucun individu n'est créé: on remplace simplement les bits des individus de la population au fur et à mersure
 
 ```
-Procédure selectPop(p: Population, tSelect: Réel, taillePop: Entier)
+Procédure selectPop(pop: Population, tSelect: Réel, taillePop: Entier)
 Début
 	nSelect: Entier <- tSelect · taillePop
-	eParcours: PElem <- tete(p)
-	eSelect: PElem <- Ø
-	i: Entier <- 0
-	tant que eParcours ≠ Ø faire
-		eSelect <- tete(p)
-		si i = tSelect alors
-			i <- 0
-			eSelect <- tete(p)
-		finsi
-		valeur(eParcours) <- valeur(eSelect)
-		i <- i+1
-		eParcours <- succ(eParcours)
-		eSelect <- succ(eParcours)
-	fait
+	si nSelect = 0 alors nSelect <- 1 finsi
+	
+    eParcours: PElem <- tete(pop)
+    eSelect: PElem <- tete(pop)
+    i: Entier <- 0
+        
+    tant que eParcours ≠ Ø faire
+        si i >= tSelect alors
+            remplacerIndiv(valeur(tete(eParcours)), valeur(tete(eSelect)))
+        finsi
+        eSelect <- succ(eSelect)
+        eParcours <- succ(eParcours)
+            
+        i <- i + 1
+        si i % nSelect = 0 alors
+            eSelect <- tete(pop)
+        finsi
+    fait
 Fin
+
+pop: Population: population à sélectionner
+tSelect: Réel: taux de sélection de la population à sélectionner
+taillePop: Entier: taille de la population à sélectionner
+nSelect: Entier: nombre d'éléments à sélectionner
+eParcours: PElem: variable d'itération sur pop recevant la valeur de eSelect au long du parcours
+eSelect: PElem: variable d'itération sur les nSelect premiers éléments de pop
+i: Entier: entier correspondant à la place de eSelect dans pop
 ```
 
 <hr>
-#### Croiser une population
 
-Expliquer qu'on créé un 2e individu et le "raccourci" pris par croiserPop
+#### Croiser une population 
+
+L'algorithme de croisement d'une population créé une nouvelle population constituée des individus de la population d'origine sélectionnés aléatoirement et croisés deux à deux. On créé la nouvelle liste en insérant en tête deux éléments de la liste d'origine, puis en les croisant, et ainsi de suite jusqu'a ce que la liste soit de taille *taillePop*. On remarque que si *taillePop* est impaire, le dernier élément de la liste est sélectionné aléatoirement mais n'est pas croisé, car il n'a pas de "partenaire".
 
 ```
 Individu indivAleatoire(pop: Population, taillePop: Entier)
 Début
 	pos: Entier <- valAléatoire(0, taillePop)
-	pour i de 0 à pos faire
+	pour i: Entier de 1 à pos faire
 		tete(pop) <- succ(tete(pop))
 	fait
 	indivAleatoire <- copierIndiv(valeur(pop))
@@ -215,7 +289,7 @@ Fin
 Population croiserPop(pop: Population, taillePop: Entier, pCroise, Réel)
 Début
 	Population pop2 <- Ø
-	pour i: Entier de 0 à taillePop/2 faire
+	pour j: Entier de 0 à taillePop/2 faire
 		pop2 <- insererTete(pop2, indivAleatoire(pop, taillePop))
 		pop2 <- insererTete(pop2, indivAleatoire(pop, taillePop))
 		croiserIndiv(valeur(tete(pop2)), valeur(succ(tete(pop2))), pCroise)
@@ -225,17 +299,23 @@ Début
 	fait
 	croiserPop <- pop2
 Fin
+
+pop: Population: population à croiser
+taillePop: Entier: taille de la population à croiser
+pCroise: Réel: probabilité d'échanger chaque bit de chaque individu croisé
+pos: Entier: position de l'élement sélectionné aléatoirement dans pop
+i: Entier: variable d'itération sur pop de 1 à pos
+j: Entier: variable d'itération sur pop de 0 à taillePop/2
+pop2: Population: nouvelle population croisée
 ```
 
-
-
-
+<hr>
 
 ## III. Implémentation en C
 
 #### Implémentation du type *Individu*
 
-Comme indiqué dans le sujet, le type *Bit* est un entier non signé sur 8 bits, équivalent au type *char*
+Comme indiqué dans le sujet, le type *Bit* est représenté un entier non signé sur 8 bits, équivalent au type *char*
 
 ```c
 typedef uint8_t Bit;
@@ -255,7 +335,7 @@ typedef IElem* Individu;
 
 #### Implémentation du type *Population*
 
-Le type *Population*, quant à lui est implémenté sous la forme d'une liste doublement chainée. En effet, l'algorithme *Quicksort* demande de pouvoir visiter un élément précédent dans la liste. Il est bien sûr possible de l'implémenter sur une liste simplement chaînée mais cela demande d'utiliser des pointeurs supplémentaires, ce qui aurait pour effet le nombre d'opérations effectuées. De plus, l'utilisation d'une liste doublement chaînée pour la population a un impact négligeable sur la mémoire, étant donné que chaque élément de cette population contient déjà un individu.
+Le type *Population*, quant à lui est implémenté sous la forme d'une liste doublement chainée. En effet, l'algorithme *Quicksort* demande de pouvoir visiter un élément précédent dans la liste. Il est bien sûr possible de l'implémenter sur une liste simplement chaînée mais cela demande d'utiliser des pointeurs supplémentaires, ce qui aurait pour effet d'augmenter le nombre d'opérations effectuées. De plus, l'utilisation d'une liste doublement chaînée pour la population a un impact négligeable sur la mémoire, étant donné que chaque élément de cette population contient déjà un individu.
 
 ```c
 typedef struct pElem {
@@ -319,20 +399,7 @@ Elle est cependant intéressante car elle retourne un test booléen correspondan
 
 Dans un tel programme, il est souvent nécessaire d'allouer dynamiquement de la mémoire, notamment à l'aide de la fonction *malloc*. Par conséquent, il est égalament important de penser à libérer cette mémoire. Dans le cas des listes chaînées, il faut parcourir l'intégralité de la liste en libérant chaque case mémoire allouée.
 
-Dans ce projet, la mémoire est libérée à l'aide d'une fonction récursive pour les deux types. Libérer la mémoire allouée pour une population nécessite également de libérer chaque individu:
-
-```c
-void viderPop(Population *pop) {
-    if (*pop != NULL) {
-        viderPop(&(*pop)->next);
-        supprIndiv(&(*pop)->indiv);
-        free(*pop);
-        *pop = NULL;
-    }
-}
-```
-
-On remarquera que chaque élément libéré est remplacé par *NULL*, ce qui n'est pas obligatoire mais reste une bonne pratique.
+Dans ce projet, la mémoire est libérée à l'aide d'une fonction récursive pour les deux types. Libérer la mémoire allouée pour une population nécessite également de libérer chaque individu. On remarquera que chaque élément libéré est remplacé par *NULL*, ce qui n'est pas obligatoire mais reste une bonne pratique.
 
 Pour m'assurer que chaque parcelle de mémoire allouée est bien libérée, j'ai utilisé l'outil *valgrind*, disponible sous linux.
 
@@ -380,8 +447,6 @@ Pour compiler le projet dans sa globalité, il suffit de lancer le *Makefile* si
 
 ## IV. Résultats
 
-
-
 #### Présentation des résultats
 
 De manière à tester le programme, il est possible d'influencer sur les paramètres suivants:
@@ -401,13 +466,13 @@ Le programme se présente sous cette forme une fois lancé:
 ```
 Choisissez la longueur d'un individu (entre 8 et 16) 16
 Choisissez la taille d'une population (entre 20 et 200) 200
-Choisissez le nombre de générations (entre 20 et 200) 20
+Choisissez le nombre de générations (entre 20 et 200) 200
 Choisissez la probabilité de croisement entre deux individus (entre 0.1 et 0.9) 0.5
 Choisissez le taux de sélection d'une population (entre 0.1 et 0.9) 0.3
 Choisissez la fonction de qualité à utiliser (f1 ou f2) f1
 ```
 
-Après la validation, le programme exécute le boucle principale et affiche le meilleur individu de la population après 200 générations. Le résultat se présente sous cette forme:
+Après la validation, le programme exécute le boucle principale et affiche le meilleur individu de la population après *nGen* générations. Le résultat se présente sous cette forme:
 
 ```
 Génération 200 / 200
@@ -417,7 +482,7 @@ Meilleur individu:
         Chaine: [0000101001000010]
 ```
 
-J'ai exécuté le programme avec différents jeux d'essais, en faisant varier les différents paramètres pour déterminer leur influence sur les résultats obtenus
+J'ai exécuté le programme avec différents jeux d'essais, en faisant varier les différents paramètres pour déterminer leur influence sur les résultats obtenus. Dans les tableaux suivants, chaque ligne correspond au meilleur individu trouvé par le programme, exécuté 10 fois. Les paramètres ont été choisis pour mettre en valeur l'influence de chaque paramètre sur le résultat, mais ces variations peuvent être plus dures à observer dans d'autres configurations.
 
 <hr>
 
@@ -425,35 +490,35 @@ J'ai exécuté le programme avec différents jeux d'essais, en faisant varier le
 
 Paramètres utilisés:  *longIndiv = 8	pCroise = 0.5	taillePop = 20	tSelect = 0.2	nGen = 200	f1*	
 
-| Individu | Qualité   |
-| -------- | --------- |
-| 01100110 | -0.041260 |
-| 01111101 | -0.000549 |
-| 01111101 | -0.000549 |
-| 10000000 | 0.000000  |
-| 10000100 | -0.000977 |
-| 10001101 | -0.010315 |
-| 01111001 | -0.002991 |
-| 10000001 | -0.000061 |
-| 01110101 | -0.007385 |
-| 01111100 | -0.000977 |
+| Individu         | Qualité   |
+| ---------------- | --------- |
+| 0111111111111111 | -0.000000 |
+| 0111111111111110 | -0.000000 |
+| 0111111111111111 | -0.000000 |
+| 0111111111111111 | -0.000000 |
+| 0111111111111111 | -0.000000 |
+| 1000000000000000 | -0.000000 |
+| 0111111111111111 | -0.000000 |
+| 1000000000001010 | -0.000000 |
+| 0111111011111111 | -0.000062 |
+| 1000000000100000 | -0.000001 |
 
 En changeant le paramètre *f1* -> *f2*:
 
-| Individu | Qualité  |
-| -------- | -------- |
-| 00011000 | 0.580935 |
-| 00000000 | 2.302585 |
-| 00101010 | 0.101030 |
-| 00000010 | 1.978466 |
-| 00000000 | 2.302585 |
-| 00000011 | 1.848826 |
-| 00000000 | 2.302585 |
-| 00010001 | 0.854747 |
-| 00000000 | 2.302585 |
-| 00000100 | 1.734080 |
+| Individu         | Qualité  |
+| ---------------- | -------- |
+| 0000000000000000 | 2.302585 |
+| 0000000000000000 | 2.302585 |
+| 0000000000100000 | 2.278941 |
+| 0000000000000100 | 2.299599 |
+| 0000000000000000 | 2.302585 |
+| 0000000000000000 | 2.302585 |
+| 0000000010000000 | 2.211189 |
+| 0000000000000000 | 2.302585 |
+| 0000000000000000 | 2.302585 |
+| 0000000000000000 | 2.302585 |
 
-On voit ici que...
+On voit ici que l'individu idéal n'est pas le même suivant la fonction utilisée. Pour la fonction f1, il semble être une liste de bit tous égaux à l'exeption du premier, avec une qualité se rapprochant de 0 par le négatif. Pour f2, on semble tendre vers une liste composée uniquement de 0, avec une qualité de 2.303.
 
 <hr>
 
@@ -462,7 +527,7 @@ On voit ici que...
 Paramètres utilisés:  *longIndiv = 8	pCroise = 0.5	taillePop = 80	tSelect = 0.2	nGen = 200,	f2*
 
 | Individu | Qualité  |
-| -------- | -------- |
+| :------- | :------- |
 | 00000000 | 2.302585 |
 | 00000000 | 2.302585 |
 | 00000000 | 2.302585 |
@@ -527,7 +592,7 @@ En changeant le paramètre *nGen* = 20 -> 200:
 | 0000000000000000 | 2.302585 |
 | 0000000000000010 | 2.301091 |
 
-Comme attendu, le paramètre *nGen* a une influence sur la valeur des meilleurs individus
+Comme attendu, le paramètre *nGen* a une influence sur la qualité du meilleurs individu: plus le nombre de générations est élevé et plus la qualité des individus est élevée. En l'occurence, on décuple le nombre de tri et de sélections de la population. Le poid de ce paramètre dans le résultat n'est cependant pas aussi élevé que ce à quoi on pourrait s'attendre, et il est souvent inutile d'aller au delà de 200 générations.
 
 <hr>
 
@@ -563,6 +628,10 @@ En changeant le paramètre *pCroise* = 0.2 -> 0.5:
 | 0000000001000000 | 2.255843 |
 | 0000000011001100 | 2.160628 |
 
+On observe que la qualité du meilleur individu est maximisée lorsque le paramètre *pCroise* est proche de 0.5, c'est à dire que la probabilité de croiser chaque bit de deux individus lors du croisement est maximisée. 
+
+On notera qu'augmenter encore *pCroise* n'aura pas pour effet d'augmenter la qualité des individus, mais inversement: croiser deux individus avec une probabilité *pCroise* très élevée revient à un échange des deux individus, ce qui n'a pas d'effet comparé à une abscence de croisement. De ce fait, le résultat sera équivalent avec *pCroise* = 0.2 et *pCroise* = 1 - 0.2.
+
 <hr>
 
 #### Influence de *taillePop*
@@ -597,8 +666,9 @@ En changeant le paramètre *taillePop* = 20 -> 80:
 | 0000000000000000 | 2.302585 |
 | 0000000000000000 | 2.302585 |
 
-<hr>
+*taillePop* est le paramètre ayant la plus grande influence sur le résultat. Comme le montrent les tableaux ce dessus, les meilleurs individus d'une population de 20 individus après 200 générations sont assez aléatoires et on ne trouve aucun individu parfait, tandis qu'avec une population de 80 individus, la majorité des individus sont parfaits. On remarquera qu'il est plus efficace d'augmenter *taillePop* que *nGen*, du moins dans le cadre de ce projet.
 
+<hr>
 
 #### Influence de *tSelect*
 
@@ -632,18 +702,17 @@ En changeant le paramètre *tSelect* = 0.1 -> 0.9:
 | 0000000010001000 | 2.205745 |
 | 0000000000000100 | 2.299599 |
 
+On voit que l'augmentation de *tSelect* a augmenté la qualité des individus. Cela peut paraitre contradictoire, car un taux de sélection plus faible devrait sélectionner de meilleurs individus. Pour expliquer cela, on peut supposer qu'un taux de sélection faible serait trop "restrictif" en gardant des individus similaires, limitant donc les chances d'obtenir de meilleurs muations avec un croisement.
+
 <hr>
 
 ## Conclusion
 
+Nous avons vu l'intégralité des algorithmes permettant de mettre en oeuvre cette version simplifiée des algorithmes d'optimisation, ainsi que leur implémentation dans le language C. Nous avons ainsi pu observer l'influence des différents paramètres dans le résultat du programme.
 
+Certains résultats m'ont personnellement surpris, notamment sur l'influence massive de la taille de la population sur la qualité du résultat, ou encore celle de *tSelect*, qui était opposée à mes attentes.
 
-
-
-
-
-
-JUSTIFIER LE FAIT QUE AVEC F1 LES MEILLEURS INDIVIDUS SONT PARFOIS DES 1
+Pour creuser le sujet, il serait intéressant de pousser ces algorithmes vers des vrais algorithmes d'optimisation pour mieux comprendre leur contexte et leur utlilité, notamment avec des caractères autres que des bits.
 
 
 

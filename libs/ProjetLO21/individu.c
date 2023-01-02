@@ -8,7 +8,7 @@
  * @param val La valeur du bit (0 ou 1)
  * @return Individu un pointeur sur la tete du nouvel individu
  */
-Individu insererTete(Individu indiv, Bit val) {
+Individu insererTeteIndiv(Individu indiv, Bit val) {
     Individu new_i = (Individu) malloc(sizeof(IElem));
     *new_i = (IElem) {.next = indiv, .val = val};
     return new_i;
@@ -33,7 +33,7 @@ static Bit _bitAleatoire(double prob) {
 Individu initIndivI(uint8_t longIndiv) {
     Individu indiv = NULL;
     for (uint8_t x=0; x<longIndiv; x++) {
-        indiv = insererTete(indiv, _bitAleatoire(0.5));
+        indiv = insererTeteIndiv(indiv, _bitAleatoire(0.5));
     }
     return indiv;
 }
@@ -49,7 +49,7 @@ Individu initIndivR(uint8_t longIndiv) {
     if (longIndiv == 0) {
         return NULL;
     } else {
-        return insererTete(initIndivR(longIndiv - 1), rand()%2);
+        return insererTeteIndiv(initIndivR(longIndiv - 1), rand()%2);
     }
 }
 
@@ -61,7 +61,7 @@ Individu initIndivR(uint8_t longIndiv) {
  */
 Individu copierIndiv(Individu indiv) {
     if (indiv != NULL) {
-        return insererTete(copierIndiv(indiv->next), indiv->val);
+        return insererTeteIndiv(copierIndiv(indiv->next), indiv->val);
     } else {
         return NULL;
     }
@@ -96,15 +96,36 @@ uint32_t valeurIndiv(Individu indiv) {
     return value;
 }
 
+/**
+ * @brief Calcul de la qualité d'un individu
+ * 
+ * @param indiv Individu dont la qualité est calculée
+ * @param conf Passage par adresse des parametres du programme
+ * @return double qualité de l'individu
+ */
 double qualiteIndiv(Individu indiv, struct config *conf) {
     return conf->fQualite(valeurIndiv(indiv), conf->longIndiv);
 }
 
+/**
+ * @brief Première fonction de qualité
+ * 
+ * @param valIndiv Valeur de l'individu
+ * @param longIndiv Longueur de l'individu
+ * @return double qualité de l'individu
+ */
 double f1(double valIndiv, uint8_t longIndiv) {
     double X = (valIndiv / (1 << longIndiv)) * 2 - 1;
     return -X * X;
 }
 
+/**
+ * @brief Seconde fonction de qualité
+ * 
+ * @param valIndiv Valeur de l'individu
+ * @param longIndiv Longueur de l'individu
+ * @return double qualité de l'individu
+ */
 double f2(double valIndiv, uint8_t longIndiv) {
     double X = (valIndiv / (1 << longIndiv)) * 4.9 + 0.1;
     return -log(X);

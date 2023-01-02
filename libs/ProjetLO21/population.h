@@ -16,6 +16,7 @@ typedef struct pElem {
 
 typedef PElem *Population;
 
+Population insererTetePop(Population pop, Individu indiv);
 Population initPop(struct config *conf);
 void quicksort(Population pop, struct config *conf);
 void selectPop(Population pop, struct config *conf);

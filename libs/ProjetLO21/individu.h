@@ -17,7 +17,7 @@ typedef struct iElem {
 
 typedef IElem* Individu;
 
-Individu insererTete(Individu indiv, Bit val);
+Individu insererTeteIndiv(Individu indiv, Bit val);
 Individu initIndivI(uint8_t longIndiv);
 Individu initIndivR(uint8_t longIndiv);
 Individu copierIndiv(Individu indiv);

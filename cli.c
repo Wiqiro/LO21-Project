@@ -1,9 +1,19 @@
 #include "cli.h"
 
+/**
+ * @brief Efface la console
+ * 
+ */
 void clear() {
     system("clear");
 }
 
+/**
+ * @brief Affiche la chaine de bit correspondante à un individu
+ * 
+ * @param indiv Individu à afficher
+ * @param conf Passage par adresse des parametres du programme
+ */
 void afficherIndiv(Individu indiv, struct config *conf) {
     printf("[");
     IElem* pop = indiv;
@@ -14,16 +24,12 @@ void afficherIndiv(Individu indiv, struct config *conf) {
     printf("]\n");
 }
 
-void afficherPop(Population pop, struct config *conf) {
-    PElem* e = pop;
-    while (e != NULL) {
-        afficherIndiv(e->indiv, conf);
-        e = e->next;
-        printf(" ");
-    }
-    printf("\n");
-}
 
+/**
+ * @brief Permet l'entrée de la configuration du programme
+ * 
+ * @param conf Passage par adresse des parametres à remplir
+ */
 void configurer(struct config *conf) {
     char buffer[64];
 

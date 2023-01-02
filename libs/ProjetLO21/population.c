@@ -7,7 +7,7 @@
  * @param indiv L'individu à insérer en tête
  * @return Population un pointeur sur la tête de la nouvelle population
  */
-static Population _insererTete(Population pop, Individu indiv) {
+Population insererTetePop(Population pop, Individu indiv) {
     Population new_p = (Population) malloc(sizeof(PElem));
     *new_p = (PElem) {.indiv = indiv, .next = pop, .prev = NULL};
     if (pop != NULL) {
@@ -26,7 +26,7 @@ static Population _insererTete(Population pop, Individu indiv) {
 Population initPop(struct config *conf) {
     Population pop = NULL;
     for (uint16_t i = 0; i < conf->taillePop; i++) {
-        pop = _insererTete(pop, initIndivI(conf->longIndiv));
+        pop = insererTetePop(pop, initIndivI(conf->longIndiv));
     }
     return pop;
 }
@@ -108,6 +108,9 @@ void quicksort(Population pop, struct config *conf) {
  */
 void selectPop(Population pop, struct config *conf) {
     uint16_t nSelect = conf->tSelect * conf->taillePop;
+    if (nSelect == 0) {
+        nSelect = 1;
+    }
     PElem* eSelect = pop;
     PElem* eParcours = pop;
     uint8_t i = 0;
@@ -122,6 +125,7 @@ void selectPop(Population pop, struct config *conf) {
             eSelect = pop;
         }
     }
+
 }
 
 
@@ -132,9 +136,9 @@ void selectPop(Population pop, struct config *conf) {
  * @param taillePop Taille de la population
  * @return Individu l'individu sélectionné aléatoirement
  */
- static Individu _indivAleatoire(Population pop, uint16_t taillePop) {
+static Individu _indivAleatoire(Population pop, uint16_t taillePop) {
     uint16_t pos = rand() % taillePop;
-    for (uint16_t i = 0; i < pos; i++) {
+    for (uint16_t i = 1; i < pos; i++) {
         pop = pop->next; //la tete de pop n'est pas changée en dehors de la fonction
     }
     return copierIndiv(pop->indiv);
@@ -150,16 +154,16 @@ void selectPop(Population pop, struct config *conf) {
  * @return Population la nouvelle population croisée
  */
 Population croiserPop(Population pop, struct config *conf) {
-    Population pop2 = NULL;
+    Population newPop = NULL;
     for (uint32_t i = 0; i < conf->taillePop/2; i++) {
-        pop2 = _insererTete(pop2, _indivAleatoire(pop, conf->taillePop));
-        pop2 = _insererTete(pop2, _indivAleatoire(pop, conf->taillePop));
-        croiserIndiv(pop2->indiv, pop2->next->indiv, conf->pCroise);
+        newPop = insererTetePop(newPop, _indivAleatoire(pop, conf->taillePop));
+        newPop = insererTetePop(newPop, _indivAleatoire(pop, conf->taillePop));
+        croiserIndiv(newPop->indiv, newPop->next->indiv, conf->pCroise);
     }
     if (conf->taillePop % 2 == 0) {
-        pop2 = _insererTete(pop2, _indivAleatoire(pop, conf->taillePop));
+        newPop = insererTetePop(newPop, _indivAleatoire(pop, conf->taillePop));
     }
-    return pop2;
+    return newPop;
 }
 
 /**
