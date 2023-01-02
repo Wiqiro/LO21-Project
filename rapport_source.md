@@ -81,7 +81,7 @@ La qualité d’un individu est calculée selon les fonction *f1* et *f2* donné
 `f1(x) = -X²` et `f2(x) = -ln(X)`
 avec `X = (x/2^longIndiv)(B-A) + A`
 
-D'un point de vue algoritmique, cela donne:
+D'un point de vue algorithmique, cela donne:
 
 ```
 Fonction f1(valIndiv: Entier, longIndiv: Entier): Entier
@@ -143,7 +143,7 @@ Ces fonctions ont été créées pour aider à la manipulation du type *Individu
   indiv: Individu: individu à copier
   ```
 
-- Remplacer Indiv: procédure récursive qui remplace un individu par les bits d'un autre individu, sans en créer un nouveau
+- RemplacerIndiv: procédure récursive qui remplace un individu par les bits d'un autre individu, sans en créer un nouveau
 
   ```
   Procédure remplacerIndiv(indiv: Individu, modele: Individu)
